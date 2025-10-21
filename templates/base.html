@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Movie Tracker{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Movie Tracker</a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('app_routes.watchlist') }}"
+                >Watchlist</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('app_routes.profile') }}"
+                >Profile</a
+              >
+            </li>
+            <li class="nav-item">
+              <form action="/logout" method="POST" class="d-inline">
+                <button type="submit" class="nav-link btn">Logout</button>
+              </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('app_routes.login') }}"
+                >Login</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('app_routes.register') }}"
+                >Register</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    {% block content %}
+    <div class="header-container">
+      <h1 class="welcome-header">Welcome to Movie Tracker!</h1>
+    </div>
+
+    <br />
+    <div class="image-container">
+      <img class="movie-banner" src= /static/images/Movie_Tracker_Banner.png
+      alt="Movie Banner" width="350" />
+    </div>
+    <div class="text-center mt-5">
+      <p class="lead">
+        Search for movies, add them to your watchlist, and track what you've
+        watched!
+      </p>
+
+      <!-- Search Form -->
+      <form action="{{ url_for('app_routes.search_movie') }}" method="get">
+        <input
+          type="text"
+          name="movie_name"
+          placeholder="Enter movie name"
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {% if current_user.is_authenticated %}
+      <div class="mt-4">
+        <a href="{{ url_for('app_routes.watchlist') }}" class="btn btn-success"
+          >View My Watchlist</a
+        >
+      </div>
+      {% else %}
+      <div class="mt-4">
+        <a href="{{ url_for('app_routes.login') }}" class="btn btn-primary"
+          >Login</a
+        >
+        <span class="mt-4">or</span>
+        <a href="{{ url_for('app_routes.register') }}" class="btn btn-primary"
+          >Register</a
+        >
+        <span class="mt-4">to start tracking movies.</span>
+      </div>
+
+      {% endif %}
+    </div>
+
+    {% endblock %}
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
